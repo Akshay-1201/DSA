@@ -15,17 +15,16 @@ Explanation: All possible pairings (ignoring the ordering of elements) are:
 3. (1, 2), (3, 4) -> min(1, 2) + min(3, 4) = 1 + 3 = 4
 So the maximum possible sum is 4
 ``` js 
-function sumPairOfArray(nums) {
-    nums.sort((a, b) => a - b);
-    let sum = 0;
-    for (let i = 0; i < nums.length; i += 2) {
-        sum += Math.min(nums[i], nums[i + 1]);
-    }
-    return sum;
-}
+function arrayPairSum(nums) {
+  nums.sort((a, b) => a - b);
 
-console.log(sumPairOfArray([1,4,3,2]));
-console.log(sumPairOfArray([6,2,6,5,1,2]));
+  let sum = 0;
+  for (let i = 0; i < nums.length; i += 2) {
+    sum += nums[i];
+  }
+
+  return sum;
+}
 ```
 #
 ### Question 2
@@ -47,17 +46,10 @@ Explanation: Alice can only eat 6 / 2 = 3 candies. Since there are only 3 types,
 she can eat one of each type.
 ``` js 
 function distributeCandies(candyType) {
-    let s = new Set(candyType);
-    let n = candyType.length;
-    if (s.size >= n / 2) {
-        return n / 2;
-    } else {
-        return s.size;
-    }
+  const maxEat = candyType.length / 2;
+  const candySet = new Set(candyType);
+  return Math.min(candySet.size, maxEat);
 }
-console.log(distributeCandies([1,1,2,2,3,3]));
-console.log(distributeCandies([1,1,2,3]));
-console.log(distributeCandies([6,6,6,6]));
 ```
 #
 ### Question 3
@@ -77,22 +69,21 @@ Output: 5
 
 Explanation: The longest harmonious subsequence is [3,2,2,2,3].
 ``` js 
-const longestHarmoniousSubsequence = (nums) => {
-    const m = new Map();
-    for (let i of nums) {
-        m.set(i, (m.get(i) || 0) + 1);
+function findLHS(nums) {
+  let maxLen = 0;
+  const frequencyMap = new Map();
+  for (const num of nums) {
+    frequencyMap.set(num, (frequencyMap.get(num) || 0) + 1);
+  }
+  for (const num of nums) {
+    if (frequencyMap.has(num + 1)) {
+      const currentLen = frequencyMap.get(num) + frequencyMap.get(num + 1);
+      maxLen = Math.max(maxLen, currentLen);
     }
-    let maxSubsequence = 0;
-    for (let [key, value] of m) {
-        if (m.has(key + 1)) {
-            maxSubsequence = Math.max(maxSubsequence, (value + m.get(key + 1)));
-        }
-    }
-    return maxSubsequence;
+  }
+
+  return maxLen;
 }
-console.log(longestHarmoniousSubsequence([1, 3, 2, 2, 5, 2, 5, 7]));
-console.log(longestHarmoniousSubsequence([1, 2, 3, 4]));
-console.log(longestHarmoniousSubsequence([1, 1, 1, 1]));
 ```
 # 
 ### Question 4
@@ -104,52 +95,28 @@ Example 1:
 Input: flowerbed = [1,0,0,0,1], n = 1
 Output: true
 ``` js 
-class Solution {
-    canPlaceFlowers(f, n) {
-        if(n==0){
-            return true;
-        }
-        for(let i=0;i<f.length;i++){
-            if (f[i]==0)
-            {
-                let sum=0;
-                let fin=0;
-                if(i==0){
-                    sum+=1;
-                }
-                while (f[i]==0 && i<f.length){
-                    sum+=1;
-                    i++;
-                    if(i==f.length){
-                        sum+=1;
-                        break;
-                    }
-                }
-                if (sum>0){
-                    if( sum%2==0){
-                        fin=(sum/2)-1;
-                        if(fin>=n){
-                            return true;
-                        }
-                        else{
-                            n-=fin;
-                        }
-                    }
-                    else if(sum>2 && sum%2!=0){
-                        fin=sum/2;
-                        if(fin>=n){
-                            return true;
-                        }
-                        else{
-                            n-=fin;
-                        }
-                    }
-                }
-                i--;
-            }
-        }
-        return false;
+function canPlaceFlowers(flowerbed, n) {
+  let count = 0;
+  let i = 0;
+
+  while (i < flowerbed.length) {
+    if (
+      flowerbed[i] === 0 &&
+      (i === 0 || flowerbed[i - 1] === 0) &&
+      (i === flowerbed.length - 1 || flowerbed[i + 1] === 0)
+    ) {
+      flowerbed[i] = 1;
+      count++;
     }
+
+    if (count >= n) {
+      return true;
+    }
+
+    i++;
+  }
+
+  return false;
 }
 ```
 #
@@ -160,28 +127,13 @@ Example 1:
 Input: nums = [1,2,3]
 Output: 6
 ``` js 
-function maxProduct(arr, n) {
-  if (n < 3) {
-    return -1;
-  }
-  let maxProduct = -Infinity;
-  for (let i = 0; i < n - 2; i++) {
-    for (let j = i + 1; j < n - 1; j++) {
-      for (let k = j + 1; k < n; k++) {
-        maxProduct = Math.max(maxProduct, arr[i] * arr[j] * arr[k]);
-      }
-    }
-  }
-  return maxProduct;
-}
+function maximumProduct(nums) {
+  nums.sort((a, b) => a - b); // Sort the array in ascending order
 
-const arr = [10, 12, 4, 6, 10];
-const n = arr.length;
-const max = maxProduct(arr, n);
-if (max === -1) {
-  console.log("No Triplet Exists");
-} else {
-  console.log(`Maximum product is ${max}`);
+  const n = nums.length;
+  const option1 = nums[0] * nums[1] * nums[n - 1];
+  const option2 = nums[n - 1] * nums[n - 2] * nums[n - 3];
+  return Math.max(option1, option2);
 }
 ```
 #
@@ -193,28 +145,24 @@ You must write an algorithm with O(log n) runtime complexity.
 Input: nums = [-1,0,3,5,9,12], target = 9
 Output: 4
 ``` js 
-function binarySearch(arr, l, r, x) {
-  while (l <= r) {
-    let m = Math.floor((l + r) / 2);
-    if (arr[m] === x) {
-      return m;
-    }
-    if (arr[m] < x) {
-      l = m + 1;
+function search(nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+
+    if (nums[mid] === target) {
+      return mid;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
     } else {
-      r = m - 1;
+      right = mid - 1;
     }
   }
+
   return -1;
 }
-
-let arr = [1, 4, 5, 2, 10];
-let x = 10;
-let n = arr.length;
-let result = binarySearch(arr, 0, n - 1, x);
-result === -1
-  ? console.log("Element is not present in array")
-  : console.log("Element is present at index " + result);
 ```
 #
 ### Question 7
