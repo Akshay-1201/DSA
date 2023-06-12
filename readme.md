@@ -9,8 +9,8 @@
 #
 ## String Assignment 
 ### [Assignment 7](https://github.com/Akshay-1201/DSA/tree/main/string/Assignment%207)
-### [Assignment 8]()
+### [Assignment 8](https://github.com/Akshay-1201/DSA/tree/main/string/Assignment%208)
 #
 ## Recursion Assignment
-### [Assignment 9]()
-### [Assignment 10]()
+### [Assignment 9](https://github.com/Akshay-1201/DSA/tree/main/Recursion/Assignment%209)
+### [Assignment 10](https://github.com/Akshay-1201/DSA/tree/main/Recursion/Assignment%2010)
